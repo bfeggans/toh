@@ -11,40 +11,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
-var common_1 = require("@angular/common");
-require("rxjs/add/operator/switchMap");
-var hero_1 = require("./hero");
 var hero_service_1 = require("./hero.service");
-var HeroDetailComponent = (function () {
-    function HeroDetailComponent(heroService, route, location) {
+var HeroesComponent = (function () {
+    function HeroesComponent(heroService, router) {
         this.heroService = heroService;
-        this.route = route;
-        this.location = location;
+        this.router = router;
     }
-    HeroDetailComponent.prototype.ngOnInit = function () {
+    HeroesComponent.prototype.ngOnInit = function () {
+        this.getHeroes();
+    };
+    HeroesComponent.prototype.onSelect = function (hero) {
+        this.selectedHero = hero;
+    };
+    HeroesComponent.prototype.getHeroes = function () {
         var _this = this;
-        this.route.params
-            .switchMap(function (params) { return _this.heroService.getHero(+params['id']); })
-            .subscribe(function (hero) { return _this.hero = hero; });
+        this.heroService.getHeroes().then(function (heroes) { return _this.heroes = heroes; });
     };
-    HeroDetailComponent.prototype.goBack = function () {
-        this.location.back();
+    HeroesComponent.prototype.goToDetail = function () {
+        this.router.navigate(['/detail', this.selectedHero.id]);
     };
-    return HeroDetailComponent;
+    return HeroesComponent;
 }());
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", hero_1.Hero)
-], HeroDetailComponent.prototype, "hero", void 0);
-HeroDetailComponent = __decorate([
+HeroesComponent = __decorate([
     core_1.Component({
-        selector: 'hero-detail',
-        templateUrl: './hero-detail.component.html',
-        styleUrls: ['./hero-detail.component.css']
+        selector: 'my-heroes',
+        styleUrls: ['./heroes.component.css'],
+        templateUrl: './heroes.component.html'
     }),
     __metadata("design:paramtypes", [hero_service_1.HeroService,
-        router_1.ActivatedRoute,
-        common_1.Location])
-], HeroDetailComponent);
-exports.HeroDetailComponent = HeroDetailComponent;
-//# sourceMappingURL=hero-detail.component.js.map
+        router_1.Router])
+], HeroesComponent);
+exports.HeroesComponent = HeroesComponent;
+//# sourceMappingURL=heroes.component.js.map
